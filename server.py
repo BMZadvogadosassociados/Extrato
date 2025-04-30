@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, render_template, url_for
 from pypdf import PdfReader, PdfWriter
 import re, os, io
 from zipfile import ZipFile
@@ -41,17 +41,21 @@ def separar_pdf_em_holerites(pdf_stream):
 
 @app.route('/', methods=['GET'])
 def index():
-    return '''
-    <h1>Upload de PDF com Holerites</h1>
-    <form method="POST" enctype="multipart/form-data" action="/upload">
-      <input type="file" name="arquivo">
-      <input type="submit">
-    </form>
-    '''
+    return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
 def upload():
+    if 'arquivo' not in request.files:
+        return render_template('index.html', error='Nenhum arquivo foi enviado')
+    
     file = request.files['arquivo']
+    
+    if file.filename == '':
+        return render_template('index.html', error='Nenhum arquivo foi selecionado')
+    
+    if not file.filename.lower().endswith('.pdf'):
+        return render_template('index.html', error='Por favor, envie um arquivo PDF')
+    
     arquivos = separar_pdf_em_holerites(file.stream)
 
     zip_buffer = io.BytesIO()
@@ -64,5 +68,10 @@ def upload():
 
 
 if __name__ == "__main__":
+    # Certifique-se de que as pastas necessárias existam
+    os.makedirs(os.path.join(app.root_path, 'static', 'css'), exist_ok=True)
+    os.makedirs(os.path.join(app.root_path, 'static', 'js'), exist_ok=True)
+    os.makedirs(os.path.join(app.root_path, 'templates'), exist_ok=True)
+    
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)
