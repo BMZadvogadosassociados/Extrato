@@ -7,25 +7,26 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo-container img {
+            max-height: 80px;
+            max-width: 100%;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <div class="logo-container">
+                <img src="https://imgur.com/a/4zAWVdA" alt="Logo da Empresa">
+            </div>
             <h1>Correção e Exportação de Extratos</h1>
             <p class="subtitle">Sistema de processamento de holerites</p>
         </header>
-
-        <section class="intro">
-            <div class="intro-content">
-                <h2><i class="fas fa-file-invoice"></i> Como funciona?</h2>
-                <p>Esta ferramenta permite processar arquivos PDF contendo múltiplos holerites e separá-los automaticamente por funcionário, facilitando a organização dos documentos.</p>
-                <ul class="features">
-                    <li><i class="fas fa-check-circle"></i> Extração automática dos nomes dos funcionários</li>
-                    <li><i class="fas fa-check-circle"></i> Separação inteligente dos holerites</li>
-                    <li><i class="fas fa-check-circle"></i> Download em formato ZIP para fácil distribuição</li>
-                </ul>
-            </div>
-        </section>
 
         <section class="upload-section">
             <div class="upload-card">
