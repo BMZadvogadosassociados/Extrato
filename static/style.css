@@ -2,9 +2,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
 :root {
-    --primary-color: #2980b9;
-    --primary-dark: #1c638d;
-    --accent-color: #3498db;
+    --primary-color: #0D47A1; /* Azul mais escuro */
+    --primary-dark: #002171; /* Versão ainda mais escura para hover */
+    --accent-color: #1565C0; /* Azul accent mais escuro */
     --light-bg: #f8f9fa;
     --dark-text: #333;
     --light-text: #f5f5f5;
@@ -37,7 +37,7 @@ body {
 /* Cabeçalho */
 header {
     text-align: center;
-    padding: 40px 20px;
+    padding: 30px 20px 40px;
     background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: var(--light-text);
     border-radius: var(--border-radius);
@@ -53,6 +53,30 @@ header h1 {
 .subtitle {
     font-size: 1.2rem;
     font-weight: 300;
+}
+
+/* Estilos para o logo */
+.logo-container {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-container img {
+    max-height: 120px;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 5px;
+    transition: var(--transition);
+}
+
+.logo-container img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Seção de introdução */
@@ -208,7 +232,7 @@ header h1 {
 footer {
     text-align: center;
     padding: 20px;
-    background-color: #333;
+    background-color: var(--primary-dark);
     color: white;
     margin-top: 40px;
 }
@@ -232,5 +256,9 @@ footer {
     #fileName {
         margin-left: 0;
         margin-top: 10px;
+    }
+    
+    .logo-container img {
+        max-height: 90px;
     }
 }
