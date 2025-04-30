@@ -1,8 +1,7 @@
-from flask import Flask, request, send_file, render_template, url_for
+from flask import Flask, request, send_file, render_template, url_for, redirect
 from pypdf import PdfReader, PdfWriter
 import re, os, io
 from zipfile import ZipFile
-import os
 
 app = Flask(__name__)
 
@@ -55,23 +54,34 @@ def upload():
     
     if not file.filename.lower().endswith('.pdf'):
         return render_template('index.html', error='Por favor, envie um arquivo PDF')
-    
+
     arquivos = separar_pdf_em_holerites(file.stream)
 
-    zip_buffer = io.BytesIO()
-    with ZipFile(zip_buffer, 'w') as zip_file:
-        for nome, conteudo in arquivos.items():
-            zip_file.writestr(nome, conteudo.getvalue())
+    pasta_saida = os.path.join(app.static_folder, 'holerites')
+    os.makedirs(pasta_saida, exist_ok=True)
 
-    zip_buffer.seek(0)
-    return send_file(zip_buffer, mimetype='application/zip', download_name='holerites.zip', as_attachment=True)
+    # Limpa a pasta antes
+    for f in os.listdir(pasta_saida):
+        os.remove(os.path.join(pasta_saida, f))
 
+    for nome, conteudo in arquivos.items():
+        with open(os.path.join(pasta_saida, nome), 'wb') as f:
+            f.write(conteudo.getvalue())
+
+    return redirect(url_for('revisao'))
+
+@app.route('/revisao', methods=['GET'])
+def revisao():
+    pasta_saida = os.path.join(app.static_folder, 'holerites')
+    arquivos = os.listdir(pasta_saida)
+    arquivos_pdf = sorted([f for f in arquivos if f.endswith('.pdf')])
+    return render_template('revisao.html', arquivos=arquivos_pdf)
 
 if __name__ == "__main__":
-    # Certifique-se de que as pastas necessárias existam
-    os.makedirs(os.path.join(app.root_path, 'static', 'css'), exist_ok=True)
-    os.makedirs(os.path.join(app.root_path, 'static', 'js'), exist_ok=True)
+    os.makedirs(os.path.join(app.static_folder, 'css'), exist_ok=True)
+    os.makedirs(os.path.join(app.static_folder, 'js'), exist_ok=True)
+    os.makedirs(os.path.join(app.static_folder, 'holerites'), exist_ok=True)
     os.makedirs(os.path.join(app.root_path, 'templates'), exist_ok=True)
-    
+
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
