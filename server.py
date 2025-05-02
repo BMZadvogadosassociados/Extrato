@@ -4,6 +4,8 @@ import re, os, io
 from zipfile import ZipFile
 import csv
 
+WEBHOOK_URL = "https://hook.us1.make.com/d7km249aggme5icqoq8t8a5urtj9nie8"
+
 # Carrega os IDs do CSV na inicialização
 discord_ids = {}
 
