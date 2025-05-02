@@ -59,16 +59,49 @@
         <p>Nenhum PDF encontrado.</p>
     {% endif %}
 
-    <script>
-        function confirmar(arquivo) {
-            alert("Confirmado: " + arquivo);
-            // Aqui pode fazer um POST ou registrar no back-end
-        }
+<script>
+    function confirmar(arquivo) {
+        fetch("/confirmar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                arquivo: arquivo,
+                acao: "confirmar"
+            })
+        }).then(res => res.json())
+          .then(data => {
+              console.log("✅ Webhook enviado:", data);
+              alert("✅ Confirmado: " + data.arquivo);
+          })
+          .catch(err => {
+              console.error("Erro ao enviar webhook:", err);
+              alert("Erro ao confirmar!");
+          });
+    }
 
-        function corrigir(arquivo) {
-            alert("Solicitado ajuste para: " + arquivo);
-            // Aqui também pode registrar que precisa de correção
-        }
-    </script>
+    function corrigir(arquivo) {
+        fetch("/confirmar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                arquivo: arquivo,
+                acao: "corrigir"
+            })
+        }).then(res => res.json())
+          .then(data => {
+              console.log("❌ Correção registrada:", data);
+              alert("❌ Marcado para correção: " + data.arquivo);
+          })
+          .catch(err => {
+              console.error("Erro ao enviar webhook:", err);
+              alert("Erro ao corrigir!");
+          });
+    }
+</script>
+
 </body>
 </html>
