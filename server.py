@@ -98,6 +98,10 @@ def confirmar_pdf():
     nome_arquivo = data.get('arquivo')
     acao = data.get('acao')
 
+    print(f"Recebido: {data}")  # <--- Adicione isso aqui
+
+    ...
+
     if nome_arquivo and acao in ['confirmar', 'corrigir']:
         nome_base = nome_arquivo.replace('.pdf', '').lower()
         discord_id = discord_ids.get(nome_base)
