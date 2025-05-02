@@ -77,6 +77,26 @@ def revisao():
     arquivos_pdf = sorted([f for f in arquivos if f.endswith('.pdf')])
     return render_template('revisao.html', arquivos=arquivos_pdf)
 
+decisoes = {}  # Armazena as confirmações em memória
+
+@app.route('/confirmar', methods=['POST'])
+def confirmar_pdf():
+    data = request.json
+    nome = data.get('arquivo')
+    acao = data.get('acao')
+
+    if nome and acao in ['confirmar', 'corrigir']:
+        decisoes[nome] = acao
+
+        # Salva em confirmacoes.json
+        with open('confirmacoes.json', 'w', encoding='utf-8') as f:
+            json.dump(decisoes, f, ensure_ascii=False, indent=2)
+
+        return jsonify({'status': 'ok', 'arquivo': nome, 'acao': acao})
+
+    return jsonify({'status': 'erro'}), 400
+
+
 if __name__ == "__main__":
     os.makedirs(os.path.join(app.static_folder, 'css'), exist_ok=True)
     os.makedirs(os.path.join(app.static_folder, 'js'), exist_ok=True)
