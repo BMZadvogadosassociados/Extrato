@@ -2,6 +2,16 @@ from flask import Flask, request, send_file, render_template, url_for, redirect
 from pypdf import PdfReader, PdfWriter
 import re, os, io
 from zipfile import ZipFile
+import csv
+
+# Carrega os IDs do CSV na inicialização
+discord_ids = {}
+
+with open('Banco_de_Dados_de_IDs_do_Discord.csv', newline='', encoding='utf-8') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        nome_norm = row['Nome'].strip().lower().replace(" ", "_")
+        discord_ids[nome_norm] = row['ID Discord']
 
 app = Flask(__name__)
 
@@ -82,20 +92,28 @@ decisoes = {}  # Armazena as confirmações em memória
 @app.route('/confirmar', methods=['POST'])
 def confirmar_pdf():
     data = request.json
-    nome = data.get('arquivo')
+    nome_arquivo = data.get('arquivo')
     acao = data.get('acao')
 
-    if nome and acao in ['confirmar', 'corrigir']:
-        decisoes[nome] = acao
+    if nome_arquivo and acao in ['confirmar', 'corrigir']:
+        nome_base = nome_arquivo.replace('.pdf', '').lower()
+        discord_id = discord_ids.get(nome_base)
+        nome_legivel = nome_base.replace('_', ' ').title()
 
-        # Salva em confirmacoes.json
-        with open('confirmacoes.json', 'w', encoding='utf-8') as f:
-            json.dump(decisoes, f, ensure_ascii=False, indent=2)
+        payload = {
+            "arquivo": nome_arquivo,
+            "acao": acao,
+            "nome": nome_legivel,
+            "discord_id": discord_id
+        }
 
-        return jsonify({'status': 'ok', 'arquivo': nome, 'acao': acao})
+        try:
+            response = requests.post(WEBHOOK_URL, json=payload)
+            return jsonify({'status': 'ok', 'enviado': payload})
+        except Exception as e:
+            return jsonify({'status': 'erro', 'detalhe': str(e)}), 500
 
     return jsonify({'status': 'erro'}), 400
-
 
 if __name__ == "__main__":
     os.makedirs(os.path.join(app.static_folder, 'css'), exist_ok=True)
