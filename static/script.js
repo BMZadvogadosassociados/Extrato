@@ -41,6 +41,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     });
 
+    function confirmar(arquivo) {
+        fetch("/confirmar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                arquivo: arquivo,
+                acao: "confirmar"
+            })
+        }).then(res => res.json())
+          .then(data => {
+              console.log("Resposta do servidor:", data);
+              alert("✅ Confirmado: " + data.arquivo);
+          });
+    }
+
+    function corrigir(arquivo) {
+        fetch("/confirmar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                arquivo: arquivo,
+                acao: "corrigir"
+            })
+        }).then(res => res.json())
+          .then(data => {
+              console.log("Resposta do servidor:", data);
+              alert("❌ Corrigir: " + data.arquivo);
+          });
+    }
+
     // Função para mostrar mensagens de toast
     function showToast(message) {
         // Criar elemento para o toast
