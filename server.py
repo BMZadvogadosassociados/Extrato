@@ -4,6 +4,7 @@ from pypdf import PdfReader, PdfWriter
 import re, os, io
 from zipfile import ZipFile
 import csv
+import base64
 
 WEBHOOK_URL = "https://hook.us1.make.com/d7km249aggme5icqoq8t8a5urtj9nie8"
 
