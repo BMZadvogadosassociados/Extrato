@@ -60,25 +60,30 @@
     {% endif %}
 
 <script>
-    function confirmar(arquivo) {
+    function enviarAcao(arquivo, acao) {
         fetch("/confirmar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                arquivo: arquivo,
-                acao: "confirmar"
-            })
-        }).then(res => res.json())
-          .then(data => {
-              console.log("✅ Webhook enviado:", data);
-              alert("✅ Confirmado: " + data.arquivo);
-          })
-          .catch(err => {
-              console.error("Erro ao enviar webhook:", err);
-              alert("Erro ao confirmar!");
-          });
+            body: JSON.stringify({ arquivo: arquivo, acao: acao })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert("Ação enviada com sucesso!");
+        })
+        .catch(error => {
+            alert("Erro ao enviar a ação.");
+            console.error(error);
+        });
+    }
+
+    function confirmar(arquivo) {
+        enviarAcao(arquivo, "confirmar");
+    }
+
+    function corrigir(arquivo) {
+        enviarAcao(arquivo, "corrigir");
     }
 
     function corrigir(arquivo) {
