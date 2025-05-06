@@ -104,20 +104,14 @@ def confirmar_pdf():
         discord_id = discord_ids.get(nome_base)
         nome_legivel = nome_base.replace('_', ' ').title()
 
-        caminho_pdf = os.path.join(app.static_folder, 'holerites', nome_arquivo)
-        try:
-            with open(caminho_pdf, "rb") as f:
-                pdf_base64 = base64.b64encode(f.read()).decode("utf-8")
-        except Exception as e:
-            print(f"Erro ao ler o PDF: {e}")
-            return jsonify({'status': 'erro', 'detalhe': 'Falha ao ler o PDF'}), 500
+        link_publico = f"https://extrato-bclc.onrender.com/static/holerites/{nome_arquivo}"
 
         payload = {
             "arquivo": nome_arquivo,
             "acao": acao,
             "nome": nome_legivel,
             "discord_id": discord_id,
-            "pdf_base64": pdf_base64
+            "url_pdf": link_publico
         }
 
         try:
