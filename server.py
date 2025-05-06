@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file, render_template, url_for, redirect 
+   from flask import Flask, request, send_file, render_template, url_for, redirect 
 import requests
 from pypdf import PdfReader, PdfWriter
 import re, os, io
@@ -104,27 +104,28 @@ def confirmar_pdf():
         discord_id = discord_ids.get(nome_base)
         nome_legivel = nome_base.replace('_', ' ').title()
 
-        # 🔽 NOVO BLOCO: lê o PDF e converte para base64
-       caminho_pdf = os.path.join(app.static_folder, 'holerites', nome_arquivo)
+        caminho_pdf = os.path.join(app.static_folder, 'holerites', nome_arquivo)
         try:
-                with open(caminho_pdf, "rb") as f:
+            with open(caminho_pdf, "rb") as f:
                 pdf_base64 = base64.b64encode(f.read()).decode("utf-8")
-                except Exception as e:
-                print(f"Erro ao ler o PDF: {e}")
-                return jsonify({'status': 'erro', 'detalhe': 'Falha ao ler o PDF'}), 500
-  
+        except Exception as e:
+            print(f"Erro ao ler o PDF: {e}")
+            return jsonify({'status': 'erro', 'detalhe': 'Falha ao ler o PDF'}), 500
+
         payload = {
             "arquivo": nome_arquivo,
             "acao": acao,
             "nome": nome_legivel,
             "discord_id": discord_id,
-            "pdf_base64": pdf_base64  # incluído no webhook
+            "pdf_base64": pdf_base64
         }
 
         try:
+            print("Enviando webhook:", payload)
             response = requests.post(WEBHOOK_URL, json=payload)
             return jsonify({'status': 'ok', 'enviado': payload})
         except Exception as e:
+            print("Erro ao enviar webhook:", e)
             return jsonify({'status': 'erro', 'detalhe': str(e)}), 500
 
     return jsonify({'status': 'erro'}), 400
