@@ -107,8 +107,9 @@ def confirmar_pdf():
         # 🔽 NOVO BLOCO: lê o PDF e converte para base64
         caminho_pdf = os.path.join(app.static_folder, 'holerites', nome_arquivo)
         try:
-            with open(caminho_pdf, "rb") as f:
-                pdf_base64 = base64.b64encode(f.read()).decode('utf-8')
+           with open(os.path.join(app.static_folder, 'holerites', nome), "rb") as f:
+            pdf_base64 = base64.b64encode(f.read()).decode("utf-8")
+                
         except Exception as e:
             return jsonify({'status': 'erro', 'detalhe': 'Falha ao ler o PDF'}), 500
 
