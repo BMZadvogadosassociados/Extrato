@@ -98,20 +98,25 @@ def confirmar_pdf():
     nome_arquivo = data.get('arquivo')
     acao = data.get('acao')
 
-    print(f"Recebido: {data}")  # <--- Adicione isso aqui
-
-    ...
-
     if nome_arquivo and acao in ['confirmar', 'corrigir']:
         nome_base = nome_arquivo.replace('.pdf', '').lower()
         discord_id = discord_ids.get(nome_base)
         nome_legivel = nome_base.replace('_', ' ').title()
 
+        # 🔽 NOVO BLOCO: lê o PDF e converte para base64
+        caminho_pdf = os.path.join(app.static_folder, 'holerites', nome_arquivo)
+        try:
+            with open(caminho_pdf, "rb") as f:
+                pdf_base64 = base64.b64encode(f.read()).decode('utf-8')
+        except Exception as e:
+            return jsonify({'status': 'erro', 'detalhe': 'Falha ao ler o PDF'}), 500
+
         payload = {
             "arquivo": nome_arquivo,
             "acao": acao,
             "nome": nome_legivel,
-            "discord_id": discord_id
+            "discord_id": discord_id,
+            "pdf_base64": pdf_base64  # incluído no webhook
         }
 
         try:
@@ -121,6 +126,7 @@ def confirmar_pdf():
             return jsonify({'status': 'erro', 'detalhe': str(e)}), 500
 
     return jsonify({'status': 'erro'}), 400
+
 
 if __name__ == "__main__":
     os.makedirs(os.path.join(app.static_folder, 'css'), exist_ok=True)
