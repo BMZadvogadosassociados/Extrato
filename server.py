@@ -105,14 +105,14 @@ def confirmar_pdf():
         nome_legivel = nome_base.replace('_', ' ').title()
 
         # 🔽 NOVO BLOCO: lê o PDF e converte para base64
-        caminho_pdf = os.path.join(app.static_folder, 'holerites', nome_arquivo)
+       caminho_pdf = os.path.join(app.static_folder, 'holerites', nome_arquivo)
         try:
-           with open(os.path.join(app.static_folder, 'holerites', nome), "rb") as f:
-            pdf_base64 = base64.b64encode(f.read()).decode("utf-8")
-                
-        except Exception as e:
-            return jsonify({'status': 'erro', 'detalhe': 'Falha ao ler o PDF'}), 500
-
+                with open(caminho_pdf, "rb") as f:
+                pdf_base64 = base64.b64encode(f.read()).decode("utf-8")
+                except Exception as e:
+                print(f"Erro ao ler o PDF: {e}")
+                return jsonify({'status': 'erro', 'detalhe': 'Falha ao ler o PDF'}), 500
+  
         payload = {
             "arquivo": nome_arquivo,
             "acao": acao,
