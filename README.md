@@ -1,3 +1,5 @@
+#Extrato
+
 ✅ Resumo Técnico – Projeto: Envio de Holerites por Discord via PDF
 👨‍💻 Autor: Eduardo Sochodolak – BMZ Advogados Associados
 🗓️ Concluído em: Maio de 2025
