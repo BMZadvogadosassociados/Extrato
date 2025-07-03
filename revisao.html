@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Revisão dos Holerites</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 40px;
+            background-color: #f7f7f7;
+        }
+        h1 {
+            color: #333;
+        }
+        .preview-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        iframe {
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+        button {
+            padding: 8px 15px;
+            margin-right: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .confirmar {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .corrigir {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Revisão dos Holerites Gerados</h1>
+
+    {% if arquivos %}
+        {% for arquivo in arquivos %}
+            <div class="preview-container">
+                <p><strong>{{ arquivo }}</strong></p>
+                <iframe src="{{ url_for('static', filename='holerites/' + arquivo) }}" width="100%" height="500px"></iframe>
+                <br>
+                <button class="confirmar" onclick="confirmar('{{ arquivo }}')">✅ Confirmar</button>
+                <button class="corrigir" onclick="corrigir('{{ arquivo }}')">❌ Corrigir</button>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Nenhum PDF encontrado.</p>
+    {% endif %}
+
+<script>
+    function enviarAcao(arquivo, acao) {
+        fetch("/confirmar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ arquivo: arquivo, acao: acao })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert("Ação enviada com sucesso!");
+        })
+        .catch(error => {
+            alert("Ação realizada.");
+            console.error(error);
+        });
+    }
+
+    function confirmar(arquivo) {
+        enviarAcao(arquivo, "confirmar");
+    }
+
+    function corrigir(arquivo) {
+        enviarAcao(arquivo, "corrigir");
+    }
+
+    function corrigir(arquivo) {
+        fetch("/confirmar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                arquivo: arquivo,
+                acao: "corrigir"
+            })
+        }).then(res => res.json())
+          .then(data => {
+              console.log("❌ Correção registrada:", data);
+              alert("❌ Marcado para correção: " + data.arquivo);
+          })
+          .catch(err => {
+              console.error("Erro ao enviar webhook:", err);
+              alert("Erro ao corrigir!");
+          });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correção e Exportação de Extratos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo-container img {
+            max-height: 400px;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="https://i.imgur.com/6a5gqxS.gif" alt="Logo da Empresa">
+            </div>
+            <h1>Correção e Exportação de Extratos</h1>
+            <p class="subtitle">Sistema de processamento de holerites</p>
+        </header>
+
+        <section class="upload-section">
+            <div class="upload-card">
+                <h2><i class="fas fa-upload"></i> Upload de Arquivo</h2>
+                <p>Selecione o arquivo PDF contendo os holerites para processamento</p>
+                
+                <form method="POST" enctype="multipart/form-data" action="/upload" id="uploadForm">
+                    <div class="file-input-container">
+                        <input type="file" name="arquivo" id="fileInput" accept=".pdf" class="file-input">
+                        <label for="fileInput" class="file-label">
+                            <i class="fas fa-file-pdf"></i> Escolher arquivo
+                        </label>
+                        <span id="fileName">Nenhum arquivo selecionado</span>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Processar Holerites
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section class="processing-section" id="processingSection" style="display: none;">
+            <div class="processing-indicator">
+                <div class="spinner"></div>
+                <p>Processando arquivo... Por favor, aguarde.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 - Sistema de Processamento de Holerites</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
